@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from torchvision import transforms
+from torch.utils.data import Dataset
 from PIL import Image
 
 
@@ -9,7 +10,6 @@ def train_data_augmentation():
         transforms.ToPILImage(),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),
-        transforms.Resize((128, 128)),
         transforms.ToTensor(),
     ])
 
@@ -21,19 +21,27 @@ def test_data_augmentation():
     ])
 
 
-def img_data_augmentation(x, y=None, transform=None):
-    if transform is not None:
-        augmented_images = []
-        for img in x:
-            augmented_img = transform(img)
-            augmented_images.append(augmented_img)
-        x = torch.stack(augmented_images)
+class ImgDataset(Dataset):
+    def __init__(self, x, y=None, transform=None):
+        self.x = x
+        # label is required to be a LongTensor
+        self.y = y
+        if y is not None:
+            self.y = torch.LongTensor(y.numpy())
+        self.transform = transform
 
-    if y is not None:
-        # Ensure y is of type LongTensor
-        y = torch.LongTensor(y)
+    def __len__(self):
+        return len(self.x)
 
-    return x, y
+    def __getitem__(self, index):
+        X = self.x[index]
+        if self.transform is not None:
+            X = self.transform(X)
+        if self.y is not None:
+            Y = self.y[index]
+            return X, Y
+        else:
+            return X
 
 
 def data_splitter(data_file, split_ratio=0.8):

@@ -1,0 +1,2 @@
+A CNN Dog and Cat Classifier built for the purpose of ICL Machine Learning and AI Capstone Project.
+See [model-card-cat-dog-cnn.md](./model-card-cat-dog-cnn.md) for more information about the model and its performance.

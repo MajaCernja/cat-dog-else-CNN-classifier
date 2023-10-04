@@ -25,12 +25,6 @@ def preprocess_pet_image_data(cat_path, dog_path, img_size=128):
                 img = cv2.resize(img, (img_size, img_size))
 
                 # converting image to numpy array and building dataset
-                # img_array = np.array(img, dtype=np.float32)
-                # label_array = np.array([labels[label]], dtype=np.int64).flatten()
-
-                # print("Image shape:", img_array.shape)
-                # print("Label shape:", label_array.shape)
-
                 processed_img_data.append([np.array(img), np.eye(2)[labels[label]]])
 
                 if label == cat:
